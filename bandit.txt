@@ -1,0 +1,67 @@
++ bandit0
+- ssh -p 2220 bandit0@...
+- ZjLjTmM6FvvyRnrb2rfNWOZOTa6ip5If
+
++ bandit1
+- cat ./-
+- must specify the full location of the file because "-" usually means an argument
+- 263JGJPfgU6LtdEvgfWU1XP5yac29mFx
+
++ bandit2
+- cat "spaces in this filename"
+- quotations needed for filename with spaces
+- MNk8KNH3Usiio41PRUEoDFPqfxLPlSmx
+
++ bandit3
+- ls -a
+- 2WmrDFRmJIq3IPxneAaMGhap0pFhF3NJ
+
++ bandit4
+- cat ./*
+- * prints all the texts
+- 4oQYVPkxZOOEOO5pTW81FB8j8lxXGUQw
+
++ bandit5
+- find ./ -type f -size 1033c ! -executable
+- -type f means only files
+- 1033c is 1033 bytes
+- HWasnPhtq9AVKe0dmk45nxy20cvUa6EG
+
++ bandit6
+- find ./ -user bandit7 -size 33c -group bandit6
+- -user for owner of file
+- -group for group that owns the file
+- morbNTDkSW6jIlUc0ymOdMaLnOlFVAaj
+
++ bandit7
+- grep millionth ./data.txt
+- dfwvzFQi4mU0wfNbFOe9RoWskMLg7eEc
+
++ bandit8
+- sort data.txt | uniq -c
+- 4CKMh1JI91bUIZZPXDqGanal4xvAg0JM
+
++ bandit9
+- strings data.txt | grep ===
+- strings is used to extract human-readable (non-binary) text 
+- FGUW5ilLVJrxX9kMYMmlN4MgbpfMiqey
+
++ bandit10
+- base64 -d data.txt
+- -d flag is for decoding from base64 to string
+- dtR173fZKb0RRsDFSGsg2RWnpNVj3qRr
+
++ bandit11
+- cat data.txt | tr '[A-Za-z]' '[N-ZA-Mn-za-m]'
+- Caesar cipher with rotation of 13 using the tr (translate) command
+- 7x16WNeHIi5YkIhWsfFIqoognUTyj9Q4
+
++ bandit12
+- multiple steps of decompression using gzip, bzip2, and tar; identify fileType using xxd 
+- xx425a is bzip2 compressed
+- xx6461 is tar zipped 
+- xx1f8b is gzip compressed
+- FO5dwFsc0cbaIiH0h8J2eUks2vdTDwAn
+
++ bandit13
+- 
