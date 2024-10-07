@@ -1,0 +1,39 @@
+Kaung Thant (John) Win
+Contributor: Jeremy Gautama
+
+
+1. 
+Alice and Bob use Diffie-Hellman to agree on a shared secret from which they derive an AES key K, 
+then Alice encrypts the long message M with using AES with the shared key K, and sends it to Bob.
+
+2.
+Alice and Bob agree on a hash function H. Alice computes H(M) and encrypts it with her private key S_A such that C = E(S_A, H(M)). She then sends M||C and sends it to Bob. If Bob's H(M) and E(P_A, C) are the same, Bob will know that the message has not been tampered with. 
+
+3.
+Alice and Bob use Diffie-Hellman to agree on a shared secret from which they derive an AES key K.
+Then, Alice encrypts the long message M using AES with the shared key K. 
+She then performs H(M), encrypts it with her S_A key, and sends the encrypted message to Bob.
+
+4.
+1) Claim 1: Someone intercepted, tampered with it, and then sent it. 
+
+This is not plausible at all since even if someone tampered with the contract, this will be quickly identified once H(C) is computed and this has value will be different from E(P_A, Sig). 
+
+2) Claim 2: Bob tampered with the contract. Bob found Alice's secret key and made changes to the contract. 
+
+This is plausible since Bob has both the authentic secret key of Alice as well as be able to create a legitimate Signature (although this is not what Alice agreed to). Therefore, the tampered contract will be legitimate, and the calculated hash value of C and E(P_A, Sig) will have the same value.
+
+3) Claim 3: Alice accidentally sent the wrong contract. 
+
+This is plausible in a scenario where both parties are lackluster with double-checking the document and this is a simple human error. 
+
+
+5. 
+Sig_CA = E(S_CA, H(M)) where M is a random message. 
+
+6. 
+Bob must provide a message M together with his signature Sig_B, such that M||Sig_B and Sig_B = E(S_B, H(M)). Then, Alice can compute H(M) and, using P_B, E(P_B, Sig_B) so that she can validate Bob's legitimacy. 
+
+7. 
+1) Mal somehow obtains the CA's secret key, allowing her to create her own trusted certificates. 
+2) Mal obtains Bob's secret key and is able to provide a signature that is legitimate but not actually from Bob. 
